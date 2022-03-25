@@ -1,6 +1,6 @@
 # This deploys the Logic Apps plan (no workflow)
 
-name: Create Logic App plan (no workflow)
+name: Infra - Logic Apps plan
 
 # Controls when the action will run. 
 on:
@@ -12,6 +12,7 @@ on:
       resourceGroupName:
         description: 'Resource group name'
         required: true
+        default: 'rg-demo-ais'
   
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel

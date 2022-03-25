@@ -19,6 +19,8 @@ This documentation will take you through the steps required to deploy the Logic 
 
 Login to Azure portal and create a [resource group as per instruction](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal#create-resource-groups)
 
+Default RG name used in this demo is 'rg-demo-ais' and used as default value.
+
 ## Step 2 : Create service principal on Azure for GitHub
 
 To create a Service Principal for GitHub to deploy resources to Azure, In the below command, replace {my-spn-name} with a unique name for your service principal and provide the {subscriptionId} and {resource-group-name}.
@@ -48,3 +50,27 @@ You should get a result such as below. Keep note of it.
 3. Copy and paste the json response from above Azure CloudShell to your GitHub Repository > Settings > Secrets > Actions > New repository secret. Name it : **AZURE_RBAC_CREDENTIALS**
 
 ## Step 3 : Deploy Azure components
+
+In GitHub:
+- In your GitHub repor, go to Actions
+- click on Workflow 'Infra - Demo integration'
+- Select Run worklow and enter parameters
+   - The subscriptionId i.e. the GUID of your subscription
+   - Resource group name:  your resource group name
+   - SQL Server name: 'sqlsrv'
+   - SQL Login id: 'adminuser'
+   - SQL Login pwd: '[choose a password]'
+   - SQL Database name: 'usecase3'
+   - DataFactory name: 'adfdemo'
+   - Function name: 'funcservicenow'
+- Run workflow
+
+## Step 4 : Deploy Logic App plan
+
+In GitHub:
+- In your GitHub repor, go to Actions
+- click on Workflow 'Infra - Logic Apps plan'
+- Select Run worklow and enter parameters
+   - The subscriptionId i.e. the GUID of your subscription
+   - Resource group name:  your resource group name
+- Run workflow

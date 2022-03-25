@@ -3,9 +3,9 @@ param location string = resourceGroup().location
 
 // storage accounts must be between 3 and 24 characters in length and use numbers and lower-case letters only
 var storageAccountName = '${substring(appName,0,10)}${uniqueString(resourceGroup().id)}' 
-var hostingPlanName = '${appName}${uniqueString(resourceGroup().id)}'
-var appInsightsName = '${appName}${uniqueString(resourceGroup().id)}'
-var functionAppName = appName
+var hostingPlanName = 'plan-${appName}${uniqueString(resourceGroup().id)}'
+var appInsightsName = 'appinsights-${appName}${uniqueString(resourceGroup().id)}'
+var functionAppName = 'func-${appName}${uniqueString(resourceGroup().id)}'
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
   name: storageAccountName

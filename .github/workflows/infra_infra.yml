@@ -1,6 +1,6 @@
 # Workflow to deploy demo components (infrastructure)
 
-name: Create demo integration (infrastructure)
+name: Infra - Demo integration
 
 # Controls when the action will run. 
 on:
@@ -12,24 +12,31 @@ on:
       resourceGroupName:
         description: 'Resource group name'
         required: true
+        default: 'rg-demo-ais'
       sqlServerName:
         description: 'SQL Server name'
         required: true
+        default: 'sqlsrv'
       sqlLogin:
         description: 'SQL Login id'
         required: true
+        default: 'adminuser'
       sqlLoginPwd:
         description: 'SQL Login pwd'
         required: true
+        default: 'PassW0rd1!'
       sqlDatabase:
         description: 'SQL Database name'
         required: true
+        default: 'usecase3'
       sqlDataFactory:
         description: 'DataFactory name'
         required: true
+        default: 'adfdemo'
       funcAppName:
         description: 'Function name'
         required: true
+        default: 'snow'
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
