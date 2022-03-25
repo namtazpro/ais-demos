@@ -1,0 +1,34 @@
+{
+	"name": "ReportDataSet_Sheet_DetailData",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adl_blobfilemanagement",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "DetailData",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "ReportData.xlsx",
+				"fileSystem": "tempstoreforprocessing"
+			}
+		},
+		"schema": [
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

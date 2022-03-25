@@ -1,0 +1,39 @@
+{
+	"name": "AzureSqlDetailData",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSql_usecase3",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "colA",
+				"type": "nvarchar"
+			},
+			{
+				"name": "colB",
+				"type": "nvarchar"
+			},
+			{
+				"name": "colC",
+				"type": "nvarchar"
+			},
+			{
+				"name": "colD",
+				"type": "nvarchar"
+			},
+			{
+				"name": "recordId",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DetailData"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
