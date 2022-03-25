@@ -75,6 +75,7 @@ jobs:
           parameters: appName=${{github.event.inputs.funcAppName}} 
 
   deploy-function:
+      needs: deploy-infra
       runs-on: windows-latest
       environment: dev
       steps:
