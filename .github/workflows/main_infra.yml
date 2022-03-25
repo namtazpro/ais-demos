@@ -16,16 +16,16 @@ on:
         description: 'SQL Server name'
         required: true
       sqlLogin:
-        description: 'SQL Login'
+        description: 'SQL Login id'
         required: true
       sqlLoginPwd:
         description: 'SQL Login pwd'
         required: true
       sqlDatabase:
-        description: 'SQL Database'
+        description: 'SQL Database name'
         required: true
       sqlDataFactory:
-        description: 'SQL Database'
+        description: 'DataFactory name'
         required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -47,4 +47,4 @@ jobs:
           subscriptionId: ${{github.event.inputs.subscriptionId}}
           resourceGroupName: ${{github.event.inputs.resourceGroupName}}
           template: ./infra/main-infra.bicep
-          parameters: sqlservername=${{github.event.inputs.sqlServerName}} sqllogin=${{github.event.inputs.sqlLogin}} sqlpassword=${{github.event.inputs.sqlLoginPwd}} sqlDatabase=${{github.event.inputs.sqlDatabase}} datafactory=${{github.event.inputs.sqlDataFactory}}
+          parameters: sqlserverName=${{github.event.inputs.sqlServerName}} sqllogin=${{github.event.inputs.sqlLogin}} sqlpassword=${{github.event.inputs.sqlLoginPwd}} sqlDatabase=${{github.event.inputs.sqlDatabase}} datafactory=${{github.event.inputs.sqlDataFactory}}
