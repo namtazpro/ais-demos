@@ -1,6 +1,6 @@
-# This deploys the Logic Apps plan (no workflow)
+# This is a basic workflow to help you get started with Actions
 
-name: Create Logic App plan (no workflow)
+name: Create Logic App
 
 # Controls when the action will run. 
 on:
