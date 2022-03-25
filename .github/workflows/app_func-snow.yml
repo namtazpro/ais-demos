@@ -2,9 +2,14 @@
 name: Deploy DotNet project to Azure Function App
 
 on:
-  push:
-    branches:
-      - v2
+ workflow_dispatch:
+    inputs:
+      subscriptionId:
+        description: 'SubscriptionId'
+        required: true
+      resourceGroupName:
+        description: 'Resource group name'
+        required: true
 
 # CONFIGURATION
 # For help, go to https://github.com/Azure/Actions

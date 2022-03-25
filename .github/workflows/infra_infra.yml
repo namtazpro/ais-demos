@@ -27,6 +27,10 @@ on:
       sqlDataFactory:
         description: 'DataFactory name'
         required: true
+      funcAppName:
+        description: 'Function name'
+        required: true
+
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -42,9 +46,19 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_RBAC_CREDENTIALS }}
-      - uses: azure/arm-deploy@v1
+
+      - name: deploy infra
+        uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{github.event.inputs.subscriptionId}}
           resourceGroupName: ${{github.event.inputs.resourceGroupName}}
           template: ./infra/main-infra.bicep
           parameters: sqlserverName=${{github.event.inputs.sqlServerName}} sqllogin=${{github.event.inputs.sqlLogin}} sqlpassword=${{github.event.inputs.sqlLoginPwd}} sqlDatabase=${{github.event.inputs.sqlDatabase}} datafactory=${{github.event.inputs.sqlDataFactory}}
+
+      - name: deploy Function plan
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{github.event.inputs.subscriptionId}}
+          resourceGroupName: ${{github.event.inputs.resourceGroupName}}
+          template: ./infra/az-function-plan.bicep
+          parameters: funcAppName=${{github.event.inputs.funcAppName}} 

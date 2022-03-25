@@ -28,6 +28,15 @@ resource res_sqlServer 'Microsoft.Sql/servers@2021-08-01-preview' = {
   }
 }
 
+/*Azure Data Factory*/
+resource res_ADF 'Microsoft.DataFactory/factories@2018-06-01' = {
+  name: datafactory
+  location: resourceGroup().location
+  tags: {
+    created: creationDate
+  }
+}
+
 /*SQL Database*/
 resource res_sqlDatabase 'Microsoft.Sql/servers/databases@2021-08-01-preview' = {
   name: '${sqlserverName}/${sqlDatabase}'
@@ -38,14 +47,7 @@ resource res_sqlDatabase 'Microsoft.Sql/servers/databases@2021-08-01-preview' = 
   sku: {
     name: 'basic'
   }
+  dependsOn:[
+    res_sqlServer
+  ]
 }
-
-/*Azure Data Factory*/
-resource res_ADF 'Microsoft.DataFactory/factories@2018-06-01' = {
-  name: datafactory
-  location: resourceGroup().location
-  tags: {
-    created: creationDate
-  }
-}
-
