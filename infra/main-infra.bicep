@@ -9,7 +9,6 @@ param sqlDatabase string
 @description('Provide Data Factory name')
 param datafactory string
 @description('Provide Logic Apps name')
-param logicapps string
 
 param creationDate string = utcNow('yyyy-MM-dd')
 

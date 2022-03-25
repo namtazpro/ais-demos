@@ -1,6 +1,6 @@
-# This is a basic workflow to help you get started with Actions
+# Workflow to deploy demo components (infrastructure)
 
-name: Create Logic App
+name: Create demo integration (infrastructure)
 
 # Controls when the action will run. 
 on:
@@ -12,14 +12,28 @@ on:
       resourceGroupName:
         description: 'Resource group name'
         required: true
-  
+      sqlServerName:
+        description: 'SQL Server name'
+        required: true
+      sqlLogin:
+        description: 'SQL Login'
+        required: true
+      sqlLoginPwd:
+        description: 'SQL Login pwd'
+        required: true
+      sqlDatabase:
+        description: 'SQL Database'
+        required: true
+      sqlDataFactory:
+        description: 'SQL Database'
+        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build-and-deploy:
     # The type of runner that the job will run on
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -32,5 +46,5 @@ jobs:
         with:
           subscriptionId: ${{github.event.inputs.subscriptionId}}
           resourceGroupName: ${{github.event.inputs.resourceGroupName}}
-          template: ./logicapps/logicapp-plan.json
-          parameters: ./logicapps/logicapp-plan.parameters.json
+          template: ./infra/main-infra.bicep
+          parameters: sqlservername=${{github.event.inputs.sqlServerName}} sqllogin=${{github.event.inputs.sqlLogin}} sqlpassword=${{github.event.inputs.sqlLoginPwd}} sqlDatabase=${{github.event.inputs.sqlDatabase}} datafactory=${{github.event.inputs.sqlDataFactory}}
