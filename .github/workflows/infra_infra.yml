@@ -61,4 +61,4 @@ jobs:
           subscriptionId: ${{github.event.inputs.subscriptionId}}
           resourceGroupName: ${{github.event.inputs.resourceGroupName}}
           template: ./infra/az-function-plan.bicep
-          parameters: funcAppName=${{github.event.inputs.funcAppName}} 
+          parameters: appName=${{github.event.inputs.funcAppName}} 
