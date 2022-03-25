@@ -1,3 +1,5 @@
+@minLength(10)
+@maxLength(15)
 param appName string
 param location string = resourceGroup().location
 
@@ -5,7 +7,7 @@ param location string = resourceGroup().location
 var storageAccountName = '${substring(appName,0,10)}${uniqueString(resourceGroup().id)}' 
 var hostingPlanName = 'plan-${appName}${uniqueString(resourceGroup().id)}'
 var appInsightsName = 'appinsights-${appName}${uniqueString(resourceGroup().id)}'
-var functionAppName = 'func-${appName}${uniqueString(resourceGroup().id)}'
+var functionAppName = appName //'func-${appName}${uniqueString(resourceGroup().id)}'
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
   name: storageAccountName
