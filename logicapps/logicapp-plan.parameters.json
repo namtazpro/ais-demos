@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "logicAppname": {
+      "value": "logicapps-usecases"
+    },
+    "appInsightName": {
+      "value": "appinsights-logicapps-usecases"
+    },
+    "use32BitWorkerProcess": {
+      "value": true
+    },
+    "hostingPlanName": {
+      "value": "plan-logicapps-usecases"
+    },
+
+    "StorageAccountName": {
+      "value": "logicappstorage727273"
+    },
+
+    "sku": {
+      "value": "WorkflowStandard"
+    },
+    "skuCode": {
+      "value": "WS1"
+    },
+    "workerSize": {
+      "value": "3"
+    },
+    "workerSizeId": {
+      "value": "3"
+    },
+    "numberOfWorkers": {
+      "value": "1"
+    }
+  }
+}
