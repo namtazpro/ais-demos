@@ -77,10 +77,4 @@ resource functionApp 'Microsoft.Web/sites@2020-06-01' = {
       ]
     }
   }
-
-  dependsOn: [
-    appInsights
-    hostingPlan
-    storageAccount
-  ]
 }

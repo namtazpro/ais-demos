@@ -33,5 +33,5 @@ jobs:
         with:
           subscriptionId: ${{github.event.inputs.subscriptionId}}
           resourceGroupName: ${{github.event.inputs.resourceGroupName}}
-          template: ./logicapps/logicapp-plan.json
-          parameters: ./logicapps/logicapp-plan.parameters.json
+          template: ./infra/logicapp-plan.json
+          parameters: ./infra/logicapp-plan.parameters.json
