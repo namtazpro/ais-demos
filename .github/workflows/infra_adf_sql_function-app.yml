@@ -63,7 +63,7 @@ jobs:
         with:
           subscriptionId: ${{github.event.inputs.subscriptionId}}
           resourceGroupName: ${{github.event.inputs.resourceGroupName}}
-          template: ./infra/iac_sql+adf.bicep
+          template: ./infra/iac_sql_adf.bicep
           parameters: sqlserverName=${{github.event.inputs.sqlServerName}} sqllogin=${{github.event.inputs.sqlLogin}} sqlpassword=${{github.event.inputs.sqlLoginPwd}} sqlDatabase=${{github.event.inputs.sqlDatabase}} datafactory=${{github.event.inputs.sqlDataFactory}}
 
       - name: deploy_function-app
