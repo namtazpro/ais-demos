@@ -49,28 +49,82 @@ You should get a result such as below. Keep note of it.
 ```
 3. Copy and paste the json response from above Azure CloudShell to your GitHub Repository > Settings > Secrets > Actions > New repository secret. Name it : **AZURE_RBAC_CREDENTIALS**
 
-## Step 3 : Deploy Azure components
+## Step 3 : Deploy SQL DB, ADF and Function-app
 
 In GitHub:
-- In your GitHub repor, go to Actions
-- click on Workflow 'Infra - Demo integration'
+- In your GitHub repo, go to Actions
+- click on Workflow 'Deploy Infra - ADF-SQL-Function-App'
 - Select Run worklow and enter parameters
    - The subscriptionId i.e. the GUID of your subscription
-   - Resource group name:  your resource group name
+   - Resource group name:  your resource group name (or use default)
    - SQL Server name: 'sqlsrv'
-   - SQL Login id: 'adminuser'
+   - SQL Login id: 'virou'
    - SQL Login pwd: '[choose a password]'
    - SQL Database name: 'usecase3'
    - DataFactory name: 'adfdemo'
-   - Function name: 'funcservicenow'
+   - Function name: 'snowvro123456'
 - Run workflow
 
-## Step 4 : Deploy Logic App plan
+## Step 4 : Deploy LogicApps-app
 
 In GitHub:
-- In your GitHub repor, go to Actions
-- click on Workflow 'Infra - Logic Apps plan'
+- In your GitHub repo, go to Actions
+- click on Workflow 'Deploy Infra - LogicApps-App'
 - Select Run worklow and enter parameters
    - The subscriptionId i.e. the GUID of your subscription
-   - Resource group name:  your resource group name
+   - Resource group name:  your resource group name (or use default)
 - Run workflow
+
+## Step 4 : Deploy and configure storage account
+
+In GitHub:
+- In your GitHub repo, go to Actions
+- click on Workflow `Deploy Infra - storage account`
+- Select Run worklow and enter parameters
+   - The subscriptionId i.e. the GUID of your subscription
+   - Resource group name:  your resource group name (or use default)
+   - Storage account name: 'blobfilemgmt12345'
+- Run workflow and wait until it completes ...
+- Once the storage account has been successfully completed, in the Azure Portal, go to the blob storage blobfilemgmt12345 then click on Containers and select container `outboundfiles`.
+- Click `Add Directory` and enter 'usecase4' then save.
+- In the storage account, select `SFTP` under Settings
+- Click `Add local user` and name Username to 'integuser'. Select `SSH Password`
+- Under Container permissions, select `Containers` 'outbound files'
+- In the list below, for `outboundfiles`, select permissions 'All'
+- Under `Home directory` enter 'outboundfiles/usecase4' (the portal checks if the path exists)
+- Click Add
+- *IMPORTANT*: copy the SSH password when the pop-up appears and save it in a safe place
+
+## Step 5 : Deploy the ServiceNow Function
+
+In GitHub:
+- In your GitHub repo, go to Actions
+- click on Workflow 'Deploy App - Function proj to Azure Function App'
+- Select Run worklow and enter parameters
+   - The subscriptionId i.e. the GUID of your subscription
+   - Resource group name:  your resource group name (or use default)
+   - Function App name: snowvro123456
+- Run workflow
+
+   
+## Step 5 : Deploy SQL objects & test data
+
+In Azure Portal:
+- Go to the SQL Database
+- Select Query editor (preview)
+- Enter login details. The first time you will get an error indicating the your IP is not allowed. Click on the provided list in the error message to add your IP to the SQL Server firewall.
+- Once logged-in, in the 'Query 1' pane, copy and paste then 'Run' the scripts, in that order, located in:
+   -  [your repo]/ais-demo/sql/stored_procedure.sql
+   -  [your repo]/ais-demo/sql/tables.sql
+   -  [your repo]/ais-demo/sql/table_1_datainsert.sql
+
+## Step 5 : Deploy SQL objects & test data
+
+In Azure Portal:
+- Go to the SQL Database
+- Select Query editor (preview)
+- Enter login details. The first time you will get an error indicating the your IP is not allowed. Click on the provided list in the error message to add your IP to the SQL Server firewall.
+- Once logged-in, in the 'Query 1' pane, copy and paste then 'Run' the scripts, in that order, located in:
+   -  [your repo]/ais-demo/sql/stored_procedure.sql
+   -  [your repo]/ais-demo/sql/tables.sql
+   -  [your repo]/ais-demo/sql/table_1_datainsert.sql
