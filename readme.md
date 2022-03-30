@@ -118,13 +118,17 @@ In Azure Portal:
    -  [your repo]/ais-demo/sql/tables.sql
    -  [your repo]/ais-demo/sql/table_1_datainsert.sql
 
-## Step 5 : Deploy SQL objects & test data
+## Step 5 : update ADF
 
 In Azure Portal:
-- Go to the SQL Database
-- Select Query editor (preview)
-- Enter login details. The first time you will get an error indicating the your IP is not allowed. Click on the provided list in the error message to add your IP to the SQL Server firewall.
-- Once logged-in, in the 'Query 1' pane, copy and paste then 'Run' the scripts, in that order, located in:
-   -  [your repo]/ais-demo/sql/stored_procedure.sql
-   -  [your repo]/ais-demo/sql/tables.sql
-   -  [your repo]/ais-demo/sql/table_1_datainsert.sql
+- Go to the Azure Data Factory instance
+- Click on 'Open Azure Data Factory Studio' panel under Getting started
+- Once opened in another browse tab, click on 'Set up code repository'
+- Select type 'GitHub' and enter your github username. Click Continue. The process will sign you in and grant ADF access to your repo
+- Under Repository name, select ais-demos. Select `main` branch for both Collaboration and Publish branch.
+- Under Root folder, enter `/adf`
+- Unselect Import existing resources and Apply
+- From the Author panel, select the `main branch` from the top left corner. 4 datasets and 1 pipeline should appear in the Factory Resources.
+- Go to Manage panel and connect the `adl_blobfilemanagement` Azure Data Lake Storage Gen2 to your instance. Use the `From Azure Subscription` option to select your blob storage account. Make sure to Test connection on the bottom right hand side
+- Do the same for the AzureSql_usecase3. Use the `From Azure Subscription` option to select your sql server and database. Enter the user name and password. Test the connection. The first time you will get an error with a provided ip address. Add the ip address to the sql server [firewall](https://docs.microsoft.com/en-us/azure/azure-sql/database/firewall-create-server-level-portal-quickstart)
+- From the Author panel, select all Dataset and Test the connection.

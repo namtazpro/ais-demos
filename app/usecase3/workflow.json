@@ -1,7 +1,131 @@
 {
     "definition": {
         "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
-        "actions": {},
+        "actions": {
+            "Execute_stored_procedure_(V2)": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "query": "Exec dbo.Checkpayload"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "sql",
+                        "operationId": "executeQuery",
+                        "serviceProviderId": "/serviceProviders/sql"
+                    }
+                },
+                "runAfter": {}
+            },
+            "For_each_row": {
+                "type": "Foreach",
+                "foreach": "@body('Parse_JSON_2')",
+                "actions": {
+                    "Result_is_negative": {
+                        "type": "If",
+                        "expression": {
+                            "and": [
+                                {
+                                    "equals": [
+                                        "@items('For_each_row')?['result1']",
+                                        1
+                                    ]
+                                }
+                            ]
+                        },
+                        "actions": {
+                            "Create_HTML_table": {
+                                "type": "Table",
+                                "inputs": {
+                                    "from": "@body('Execute_stored_procedure_(V2)')?['resultsets']?['Table1']",
+                                    "format": "HTML"
+                                },
+                                "runAfter": {
+                                    "HTTP": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            },
+                            "HTTP": {
+                                "type": "Http",
+                                "inputs": {
+                                    "method": "POST",
+                                    "uri": "https://func-servicenow.azurewebsites.net/api/CreateIncident?code=UHZQwOkVcnUcwwP1GmR7cWuNx33RrMe4OkbkpoK4tNU7R4IgaDltNw==",
+                                    "body": {
+                                        "IncidentDescription": "Record: @{items('For_each_row')['data1']} has an error"
+                                    }
+                                },
+                                "runAfter": {}
+                            },
+                            "Send_an_email_(V2)": {
+                                "type": "ApiConnection",
+                                "inputs": {
+                                    "host": {
+                                        "connection": {
+                                            "referenceName": "office365"
+                                        }
+                                    },
+                                    "method": "post",
+                                    "body": {
+                                        "To": "vincent.rouet@microsoft.com",
+                                        "Subject": "usecase3 Process error alert",
+                                        "Body": "<p>An error occured in the following dataset<br>\n<br>\n@{body('Create_HTML_table')}<br>\n<br>\nError in record: @{items('For_each_row')?['data1']}<br>\n<br>\n@{body('HTTP')}</p>"
+                                    },
+                                    "path": "/v2/Mail"
+                                },
+                                "runAfter": {
+                                    "Create_HTML_table": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            }
+                        },
+                        "runAfter": {}
+                    }
+                },
+                "runAfter": {
+                    "Parse_JSON_2": [
+                        "Succeeded"
+                    ]
+                }
+            },
+            "Parse_JSON_2": {
+                "type": "ParseJson",
+                "inputs": {
+                    "content": "@body('Execute_stored_procedure_(V2)')?['resultsets']?['Table1']",
+                    "schema": {
+                        "items": {
+                            "properties": {
+                                "data1": {
+                                    "type": "string"
+                                },
+                                "data2": {
+                                    "type": "string"
+                                },
+                                "data3": {
+                                    "type": "string"
+                                },
+                                "result1": {
+                                    "type": "integer"
+                                }
+                            },
+                            "required": [
+                                "data1",
+                                "result1",
+                                "data2",
+                                "data3"
+                            ],
+                            "type": "object"
+                        },
+                        "type": "array"
+                    }
+                },
+                "runAfter": {
+                    "Execute_stored_procedure_(V2)": [
+                        "Succeeded"
+                    ]
+                }
+            }
+        },
         "triggers": {
             "Recurrence": {
                 "type": "Recurrence",
