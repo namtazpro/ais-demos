@@ -1,6 +1,6 @@
 # Workflow to deploy demo components (infrastructure)
 
-name: Deploy ADF-SQL-Function
+name: Deploy Infra - ADF-SQL-Function-App
 
 # Controls when the action will run. 
 on:
