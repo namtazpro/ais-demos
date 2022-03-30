@@ -39,5 +39,5 @@ jobs:
         with:
           subscriptionId: ${{github.event.inputs.subscriptionId}}
           resourceGroupName: ${{github.event.inputs.resourceGroupName}}
-          template: ./infra/iad_blobstorage.bicep
+          template: ./infra/iac_blobstorage.bicep
           parameters: storageAccountName=${{github.event.inputs.storageAccountName}}
