@@ -20,7 +20,7 @@ on:
       sqlLogin:
         description: 'SQL Login id'
         required: true
-        default: 'johnbest'
+        default: 'virou'
       sqlLoginPwd:
         description: 'SQL Login pwd'
         required: true
