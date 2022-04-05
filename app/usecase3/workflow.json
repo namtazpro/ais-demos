@@ -16,47 +16,84 @@
                 },
                 "runAfter": {}
             },
-            "For_each_row": {
+            "Parse_JSON_2": {
+                "type": "ParseJson",
+                "inputs": {
+                    "content": "@body('Execute_stored_procedure_(V2)')?[0]",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "data1": {
+                                    "type": "string"
+                                },
+                                "result1": {
+                                    "type": "integer"
+                                },
+                                "data2": {
+                                    "type": "string"
+                                },
+                                "data3": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "data1",
+                                "result1",
+                                "data2",
+                                "data3"
+                            ]
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Execute_stored_procedure_(V2)": [
+                        "Succeeded"
+                    ]
+                }
+            },
+            "For_each": {
                 "type": "Foreach",
                 "foreach": "@body('Parse_JSON_2')",
                 "actions": {
-                    "Result_is_negative": {
+                    "Condition": {
                         "type": "If",
                         "expression": {
                             "and": [
                                 {
                                     "equals": [
-                                        "@items('For_each_row')?['result1']",
+                                        "@items('For_each')?['result1']",
                                         1
                                     ]
                                 }
                             ]
                         },
                         "actions": {
-                            "Create_HTML_table": {
-                                "type": "Table",
-                                "inputs": {
-                                    "from": "@body('Execute_stored_procedure_(V2)')?['resultsets']?['Table1']",
-                                    "format": "HTML"
-                                },
-                                "runAfter": {
-                                    "HTTP": [
-                                        "Succeeded"
-                                    ]
-                                }
-                            },
-                            "HTTP": {
+                            "HTTP_2": {
                                 "type": "Http",
                                 "inputs": {
                                     "method": "POST",
-                                    "uri": "https://func-servicenow.azurewebsites.net/api/CreateIncident?code=UHZQwOkVcnUcwwP1GmR7cWuNx33RrMe4OkbkpoK4tNU7R4IgaDltNw==",
+                                    "uri": "https://snowvro123456.azurewebsites.net/api/CreateIncident?code=qeuW0rhqHz0F4kVmtFhuqaH/NYHOsqQyBEnaofqb5Fid0dBVLW4bJg==",
                                     "body": {
-                                        "IncidentDescription": "Record: @{items('For_each_row')['data1']} has an error"
+                                        "IncidentDescription": "Record: @{items('For_each')?['data1']} has an error"
                                     }
                                 },
                                 "runAfter": {}
                             },
-                            "Send_an_email_(V2)": {
+                            "Create_HTML_table_2": {
+                                "type": "Table",
+                                "inputs": {
+                                    "from": "@body('Parse_JSON_2')",
+                                    "format": "HTML"
+                                },
+                                "runAfter": {
+                                    "HTTP_2": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            },
+                            "Send_an_email_(V2)_2": {
                                 "type": "ApiConnection",
                                 "inputs": {
                                     "host": {
@@ -68,12 +105,12 @@
                                     "body": {
                                         "To": "vincent.rouet@microsoft.com",
                                         "Subject": "usecase3 Process error alert",
-                                        "Body": "<p>An error occured in the following dataset<br>\n<br>\n@{body('Create_HTML_table')}<br>\n<br>\nError in record: @{items('For_each_row')?['data1']}<br>\n<br>\n@{body('HTTP')}</p>"
+                                        "Body": "<p>An error occured in the following dataset<br>\n<br>\n@{body('Create_HTML_table_2')}<br>\n<br>\nError in record: @{items('For_each')?['data1']}<br>\n<br>\n@{body('HTTP_2')}</p>"
                                     },
                                     "path": "/v2/Mail"
                                 },
                                 "runAfter": {
-                                    "Create_HTML_table": [
+                                    "Create_HTML_table_2": [
                                         "Succeeded"
                                     ]
                                 }
@@ -84,43 +121,6 @@
                 },
                 "runAfter": {
                     "Parse_JSON_2": [
-                        "Succeeded"
-                    ]
-                }
-            },
-            "Parse_JSON_2": {
-                "type": "ParseJson",
-                "inputs": {
-                    "content": "@body('Execute_stored_procedure_(V2)')?['resultsets']?['Table1']",
-                    "schema": {
-                        "items": {
-                            "properties": {
-                                "data1": {
-                                    "type": "string"
-                                },
-                                "data2": {
-                                    "type": "string"
-                                },
-                                "data3": {
-                                    "type": "string"
-                                },
-                                "result1": {
-                                    "type": "integer"
-                                }
-                            },
-                            "required": [
-                                "data1",
-                                "result1",
-                                "data2",
-                                "data3"
-                            ],
-                            "type": "object"
-                        },
-                        "type": "array"
-                    }
-                },
-                "runAfter": {
-                    "Execute_stored_procedure_(V2)": [
                         "Succeeded"
                     ]
                 }
