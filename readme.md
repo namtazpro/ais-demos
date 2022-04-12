@@ -133,3 +133,6 @@ In Azure Portal:
 - Do the same for the AzureSql_usecase3. Use the `From Azure Subscription` option to select your sql server and database. Enter the user name and password. Test the connection. The first time you will get an error with a provided ip address. Add the ip address to the sql server [firewall](https://docs.microsoft.com/en-us/azure/azure-sql/database/firewall-create-server-level-portal-quickstart)
 - From the Author panel, select all Dataset and Test the connection.
 - From the Author panel, click `Publish` to take changes into account in your ADF instance.
+
+## Step 6: Deploy Logic Apps workflows
+In
