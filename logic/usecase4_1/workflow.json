@@ -1,0 +1,379 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Initialize_variable_adf_execution": {
+                "type": "InitializeVariable",
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "adf_execution_complete",
+                            "type": "boolean",
+                            "value": "@bool(false)"
+                        }
+                    ]
+                },
+                "runAfter": {}
+            },
+            "For_each": {
+                "type": "Foreach",
+                "foreach": "@triggerBody()?['attachments']",
+                "actions": {
+                    "Reset_adf_execution_variable": {
+                        "type": "SetVariable",
+                        "inputs": {
+                            "name": "adf_execution_complete",
+                            "value": "@bool(false)"
+                        },
+                        "runAfter": {}
+                    },
+                    "Uploads_a_Blob_to_Azure_Storage": {
+                        "type": "ServiceProvider",
+                        "inputs": {
+                            "parameters": {
+                                "containerName": "tempstoreforprocessing",
+                                "blobName": "@items('For_each')?['name']",
+                                "content": "@items('For_each')?['contentBytes']"
+                            },
+                            "serviceProviderConfiguration": {
+                                "connectionName": "AzureBlob",
+                                "operationId": "uploadBlob",
+                                "serviceProviderId": "/serviceProviders/AzureBlob"
+                            }
+                        },
+                        "runAfter": {
+                            "Reset_adf_execution_variable": [
+                                "Succeeded"
+                            ]
+                        }
+                    },
+                    "run_ADF_ingestion_pipeline": {
+                        "type": "ApiConnection",
+                        "inputs": {
+                            "host": {
+                                "connection": {
+                                    "referenceName": "azuredatafactory"
+                                }
+                            },
+                            "method": "post",
+                            "path": "/subscriptions/@{encodeURIComponent('1d753eb4-5ec5-4e40-a89b-99c7ab6dfc14')}/resourcegroups/@{encodeURIComponent('rg-ais-demos')}/providers/Microsoft.DataFactory/factories/@{encodeURIComponent('adfdemopsaqrwi2o3626')}/pipelines/@{encodeURIComponent('IngestReportingData')}/CreateRun",
+                            "queries": {
+                                "x-ms-api-version": "2017-09-01-preview"
+                            }
+                        },
+                        "runAfter": {
+                            "Uploads_a_Blob_to_Azure_Storage": [
+                                "Succeeded"
+                            ]
+                        }
+                    },
+                    "Until_ADF_is_complete": {
+                        "type": "Until",
+                        "expression": "@equals(variables('adf_execution_complete'), bool(true))",
+                        "limit": {
+                            "count": 60,
+                            "timeout": "PT1H"
+                        },
+                        "actions": {
+                            "Execute_Query": {
+                                "type": "ServiceProvider",
+                                "inputs": {
+                                    "parameters": {
+                                        "query": "exec dbo.CountRows"
+                                    },
+                                    "serviceProviderConfiguration": {
+                                        "connectionName": "sql",
+                                        "operationId": "executeQuery",
+                                        "serviceProviderId": "/serviceProviders/sql"
+                                    }
+                                },
+                                "runAfter": {}
+                            },
+                            "For_each_row_(max_1)": {
+                                "type": "Foreach",
+                                "foreach": "@body('Parse_JSON')",
+                                "actions": {
+                                    "Condition": {
+                                        "type": "If",
+                                        "expression": {
+                                            "and": [
+                                                {
+                                                    "greater": [
+                                                        "@items('For_each_row_(max_1)')['Nbofrows']",
+                                                        0
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "actions": {
+                                            "Set_variable_to_execution_complete": {
+                                                "type": "SetVariable",
+                                                "inputs": {
+                                                    "name": "adf_execution_complete",
+                                                    "value": "@bool(true)"
+                                                },
+                                                "runAfter": {}
+                                            }
+                                        },
+                                        "runAfter": {}
+                                    }
+                                },
+                                "runAfter": {
+                                    "Parse_JSON": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            },
+                            "Parse_JSON": {
+                                "type": "ParseJson",
+                                "inputs": {
+                                    "content": "@outputs('Execute_Query')?['body']?[0]",
+                                    "schema": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "Nbofrows": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "required": [
+                                                "Nbofrows"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "runAfter": {
+                                    "Execute_Query": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            }
+                        },
+                        "runAfter": {
+                            "run_ADF_ingestion_pipeline": [
+                                "Succeeded"
+                            ]
+                        }
+                    },
+                    "Send_file_to_SFTP_location": {
+                        "type": "ApiConnection",
+                        "inputs": {
+                            "host": {
+                                "connection": {
+                                    "referenceName": "sftpwithssh"
+                                }
+                            },
+                            "method": "post",
+                            "body": "@base64ToBinary(items('For_each')?['contentBytes'])",
+                            "headers": {
+                                "ReadFileMetadataFromServer": true
+                            },
+                            "path": "/datasets/default/files",
+                            "queries": {
+                                "folderPath": "/",
+                                "name": "@{items('For_each')?['name']}_report",
+                                "queryParametersSingleEncoded": true
+                            }
+                        },
+                        "runAfter": {
+                            "Until_ADF_is_complete": [
+                                "Succeeded"
+                            ]
+                        },
+                        "runtimeConfiguration": {
+                            "contentTransfer": {
+                                "transferMode": "Chunked"
+                            }
+                        }
+                    },
+                    "Send_approval_email": {
+                        "type": "ApiConnectionWebhook",
+                        "inputs": {
+                            "host": {
+                                "connection": {
+                                    "referenceName": "office365"
+                                }
+                            },
+                            "body": {
+                                "NotificationUrl": "@{listCallbackUrl()}",
+                                "Message": {
+                                    "To": "virouet@microsoft.com",
+                                    "Subject": "Approval Request",
+                                    "Options": "Approve, Reject",
+                                    "Body": "File @{items('For_each')?['name']}",
+                                    "Importance": "Normal",
+                                    "HideHTMLMessage": false,
+                                    "ShowHTMLConfirmationDialog": false
+                                }
+                            },
+                            "path": "/approvalmail/$subscriptions"
+                        },
+                        "runAfter": {
+                            "Send_file_to_SFTP_location": [
+                                "Succeeded"
+                            ]
+                        }
+                    },
+                    "Report_Approved": {
+                        "type": "If",
+                        "expression": {
+                            "and": [
+                                {
+                                    "equals": [
+                                        "@body('Send_approval_email')?['SelectedOption']",
+                                        "Approve"
+                                    ]
+                                }
+                            ]
+                        },
+                        "actions": {
+                            "Process_Report_Data": {
+                                "type": "ServiceProvider",
+                                "inputs": {
+                                    "parameters": {
+                                        "query": "exec dbo.ProcessReport @{items('For_each')?['name']}"
+                                    },
+                                    "serviceProviderConfiguration": {
+                                        "connectionName": "sql",
+                                        "operationId": "executeQuery",
+                                        "serviceProviderId": "/serviceProviders/sql"
+                                    }
+                                },
+                                "runAfter": {}
+                            },
+                            "Report_Processed": {
+                                "type": "If",
+                                "expression": {
+                                    "and": [
+                                        {
+                                            "equals": [
+                                                "",
+                                                ""
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "actions": {
+                                    "Send_an_email_to_business": {
+                                        "type": "ApiConnection",
+                                        "inputs": {
+                                            "host": {
+                                                "connection": {
+                                                    "referenceName": "office365"
+                                                }
+                                            },
+                                            "method": "post",
+                                            "body": {
+                                                "To": "virouet@microsoft.com",
+                                                "Subject": "Report processing Success",
+                                                "Body": "<p>Report A can be run</p>"
+                                            },
+                                            "path": "/v2/Mail"
+                                        },
+                                        "runAfter": {}
+                                    }
+                                },
+                                "runAfter": {
+                                    "Process_Report_Data": [
+                                        "Succeeded"
+                                    ]
+                                },
+                                "else": {
+                                    "actions": {
+                                        "HTTP": {
+                                            "type": "Http",
+                                            "inputs": {
+                                                "method": "POST",
+                                                "uri": "https://snowvro123456.azurewebsites.net/api/CreateIncident?code=qeuW0rhqHz0F4kVmtFhuqaH/NYHOsqQyBEnaofqb5Fid0dBVLW4bJg==",
+                                                "body": {
+                                                    "IncidentDescription": "Report A process generated an error"
+                                                }
+                                            },
+                                            "runAfter": {}
+                                        },
+                                        "Send_an_email_to_support": {
+                                            "type": "ApiConnection",
+                                            "inputs": {
+                                                "host": {
+                                                    "connection": {
+                                                        "referenceName": "office365"
+                                                    }
+                                                },
+                                                "method": "post",
+                                                "body": {
+                                                    "To": "virouet@microsoft.com",
+                                                    "Subject": "Service incident for Report A",
+                                                    "Body": "<p>@{body('HTTP')}</p>"
+                                                },
+                                                "path": "/v2/Mail"
+                                            },
+                                            "runAfter": {
+                                                "HTTP": [
+                                                    "Succeeded"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "runAfter": {
+                            "Send_approval_email": [
+                                "Succeeded"
+                            ]
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Initialize_variable_adf_execution": [
+                        "Succeeded"
+                    ]
+                }
+            }
+        },
+        "triggers": {
+            "When_a_new_email_arrives_(V3)": {
+                "type": "ApiConnectionNotification",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "referenceName": "office365"
+                        }
+                    },
+                    "fetch": {
+                        "queries": {
+                            "folderPath": "Inbox",
+                            "importance": "Any",
+                            "fetchOnlyWithAttachment": true,
+                            "includeAttachments": true,
+                            "subjectFilter": "Sales of the day"
+                        },
+                        "pathTemplate": {
+                            "template": "/v3/Mail/OnNewEmail"
+                        },
+                        "method": "get"
+                    },
+                    "subscribe": {
+                        "queries": {
+                            "folderPath": "Inbox",
+                            "importance": "Any",
+                            "fetchOnlyWithAttachment": true
+                        },
+                        "body": {
+                            "NotificationUrl": "@{listCallbackUrl()}"
+                        },
+                        "pathTemplate": {
+                            "template": "/GraphMailSubscriptionPoke/$subscriptions"
+                        },
+                        "method": "post"
+                    }
+                },
+                "splitOn": "@triggerBody()?['value']"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {}
+    },
+    "kind": "Stateful"
+}

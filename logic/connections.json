@@ -1,0 +1,66 @@
+{
+  "serviceProviderConnections": {
+    "sql": {
+      "parameterValues": {
+        "connectionString": "@appsetting('sql_connectionString')"
+      },
+      "serviceProvider": {
+        "id": "/serviceProviders/sql"
+      },
+      "displayName": "sql_connec"
+    },
+    "AzureBlob": {
+      "parameterValues": {
+        "connectionString": "@appsetting('AzureBlob_connectionString')"
+      },
+      "serviceProvider": {
+        "id": "/serviceProviders/AzureBlob"
+      },
+      "displayName": "tempstoreforprocessing"
+    }
+  },
+  "managedApiConnections": {
+    "office365": {
+      "api": {
+        "id": "/subscriptions/1d753eb4-5ec5-4e40-a89b-99c7ab6dfc14/providers/Microsoft.Web/locations/westeurope/managedApis/office365"
+      },
+      "connection": {
+        "id": "/subscriptions/1d753eb4-5ec5-4e40-a89b-99c7ab6dfc14/resourceGroups/rg-ais-demos/providers/Microsoft.Web/connections/office365"
+      },
+      "connectionRuntimeUrl": "https://2bb1f3d80617de1c.10.common.logic-westeurope.azure-apihub.net/apim/office365/bef3fa5c3ce444f584be9a59d44f924a/",
+      "authentication": {
+        "type": "Raw",
+        "scheme": "Key",
+        "parameter": "@appsetting('office365-connectionKey')"
+      }
+    },
+    "azuredatafactory": {
+      "api": {
+        "id": "/subscriptions/1d753eb4-5ec5-4e40-a89b-99c7ab6dfc14/providers/Microsoft.Web/locations/westeurope/managedApis/azuredatafactory"
+      },
+      "connection": {
+        "id": "/subscriptions/1d753eb4-5ec5-4e40-a89b-99c7ab6dfc14/resourceGroups/rg-ais-demos/providers/Microsoft.Web/connections/azuredatafactory"
+      },
+      "connectionRuntimeUrl": "https://2bb1f3d80617de1c.10.common.logic-westeurope.azure-apihub.net/apim/azuredatafactory/fb18c0470dd64aa38a782d3025f18af3/",
+      "authentication": {
+        "type": "Raw",
+        "scheme": "Key",
+        "parameter": "@appsetting('azuredatafactory-connectionKey')"
+      }
+    },
+    "sftpwithssh": {
+      "api": {
+        "id": "/subscriptions/1d753eb4-5ec5-4e40-a89b-99c7ab6dfc14/providers/Microsoft.Web/locations/westeurope/managedApis/sftpwithssh"
+      },
+      "connection": {
+        "id": "/subscriptions/1d753eb4-5ec5-4e40-a89b-99c7ab6dfc14/resourceGroups/rg-ais-demos/providers/Microsoft.Web/connections/sftpwithssh-2"
+      },
+      "connectionRuntimeUrl": "https://2bb1f3d80617de1c.10.common.logic-westeurope.azure-apihub.net/apim/sftpwithssh/0cf4102221a941ea98452b4215a03c09/",
+      "authentication": {
+        "type": "Raw",
+        "scheme": "Key",
+        "parameter": "@appsetting('sftpwithssh-connectionKey')"
+      }
+    }
+  }
+}
