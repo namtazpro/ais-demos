@@ -66,6 +66,7 @@ In GitHub:
 - Run workflow
 
 ## Step 4 : Deploy LogicApps-app
+TO DO: generate a unique name for the LogicApp blob storage and a unique name for the LogicApp (in parameters file)
 
 In GitHub:
 - In your GitHub repo, go to Actions
