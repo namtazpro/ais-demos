@@ -76,7 +76,7 @@ In GitHub:
    - Resource group name:  your resource group name (or use default)
 - Run workflow
 
-## Step 4 : Deploy and configure storage account
+## Step 5 : Deploy and configure storage account
 
 In GitHub:
 - In your GitHub repo, go to Actions
@@ -96,7 +96,7 @@ In GitHub:
 - Click Add
 - *IMPORTANT*: copy the SSH password when the pop-up appears and save it in a safe place
 
-## Step 5 : Deploy the ServiceNow Function
+## Step 6 : Deploy the ServiceNow Function
 
 In GitHub:
 - In your GitHub repo, go to Actions
@@ -108,7 +108,7 @@ In GitHub:
 - Run workflow
 
    
-## Step 5 : Deploy SQL objects & test data
+## Step 7 : Deploy SQL objects & test data
 
 In Azure Portal:
 - Go to the SQL Database
@@ -119,7 +119,7 @@ In Azure Portal:
    -  [your repo]/ais-demo/sql/tables.sql
    -  [your repo]/ais-demo/sql/table_1_datainsert.sql
 
-## Step 5 : update ADF
+## Step 8 : update ADF
 
 In Azure Portal:
 - Go to the Azure Data Factory instance
@@ -135,5 +135,5 @@ In Azure Portal:
 - From the Author panel, select all Dataset and Test the connection.
 - From the Author panel, click `Publish` to take changes into account in your ADF instance.
 
-## Step 6: Deploy Logic Apps workflows
-In
+## Step 9: Deploy Logic Apps workflows
+TODO
