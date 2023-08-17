@@ -45,6 +45,7 @@ resource sqlDB 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
   }
   sku: {
     tier: 'Basic'
+    name: 'Basic'
   }
 }
 
