@@ -9,10 +9,11 @@ on:
       subscriptionId:
         description: 'SubscriptionId'
         required: true
+        default: '8bcaf808-26b1-45e4-8340-ec627a7afa0a'
       resourceGroupName:
         description: 'Resource group name'
         required: true
-        default: 'rg-ais-demos'
+        default: 'rg-aisdemo'
       sqlServerName:
         description: 'SQL Server name'
         required: true
