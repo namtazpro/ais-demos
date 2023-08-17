@@ -38,7 +38,7 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
 
 resource sqlDB 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
   parent: sqlServer
-  name: '${sqlsName}/${sqlDatabase}'
+  name: sqlDatabase
   location: location
   tags: {
     created: creationDate
