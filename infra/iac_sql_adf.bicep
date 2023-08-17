@@ -1,14 +1,21 @@
 @description('Provide SQL Server name')
 param sqlserverName string
+
 var sqlsName = '${sqlserverName}${uniqueString(resourceGroup().id)}'
+
 @description('Provide SQL server login')
 param sqllogin string
+
 @description('Provide SQL server login password')
+@secure()
 param sqlpassword string
+
 @description('Provide SQL Database name')
 param sqlDatabase string
+
 @description('Provide Data Factory name')
 param datafactory string
+
 var adfName = '${datafactory}${uniqueString(resourceGroup().id)}'
 
 param creationDate string = utcNow('yyyy-MM-dd')
