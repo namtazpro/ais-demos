@@ -8,11 +8,12 @@ on:
     inputs:
       subscriptionId:
         description: 'SubscriptionId'
-        required: true
+        required: true 
+        default: '8bcaf808-26b1-45e4-8340-ec627a7afa0a'
       resourceGroupName:
         description: 'Resource group name'
         required: true
-        default: 'rg-ais-demos'
+        default: 'rg-aisdemo'
   
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
