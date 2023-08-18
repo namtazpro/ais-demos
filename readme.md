@@ -137,3 +137,5 @@ In Azure Portal:
 
 ## Step 9: Deploy Logic Apps workflows
 TODO
+- Deploy the logic app from Visual Studio code. Edit by opening in the folder 'Logic' and deploy from the main folder, right-clik on 'Logic' folder.
+- Once deployed, the 'serviceProviderConnections' connection strings have to be added in the Configuration section of the Function App. The connection strings for SQL and the blob storage
