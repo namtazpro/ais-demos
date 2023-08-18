@@ -37,7 +37,7 @@ on:
       funcAppName:
         description: 'Function name (minimum 10 char)'
         required: true
-        default: 'snowvro123456'
+        default: 'snowvro7891011'
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: './function'    # set this to the path to your web app project, defaults to the repository root
