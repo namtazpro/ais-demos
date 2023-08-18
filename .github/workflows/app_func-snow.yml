@@ -14,7 +14,7 @@ on:
       functionAppName:
         description: 'Function App name'
         required: true
-        default: 'snowvro123456'
+        default: 'snowvro7891011'
 
 # CONFIGURATION
 # For help, go to https://github.com/Azure/Actions
