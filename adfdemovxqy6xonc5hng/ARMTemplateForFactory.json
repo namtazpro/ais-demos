@@ -25,17 +25,18 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/IngestReportingData')]",
+			"name": "[concat(parameters('factoryName'), '/ReportsData')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"description": "Ingest sales of the day report data",
 				"activities": [
 					{
-						"name": "copy ReportData Sheet",
+						"name": "Copy ReportData sheet",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
-							"timeout": "7.00:00:00",
+							"timeout": "0.12:00:00",
 							"retry": 0,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
@@ -125,32 +126,32 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "ReportDataSet_Sheet_ReportData",
+								"referenceName": "excelReportData",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "AzureSqlReportData",
+								"referenceName": "sqlReportData",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						]
 					},
 					{
-						"name": "copy DetailData sheet",
+						"name": "Copy DetailData sheet",
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "copy ReportData Sheet",
+								"activity": "Copy ReportData sheet",
 								"dependencyConditions": [
 									"Succeeded"
 								]
 							}
 						],
 						"policy": {
-							"timeout": "7.00:00:00",
+							"timeout": "0.12:00:00",
 							"retry": 0,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
@@ -229,14 +230,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "ReportDataSet_Sheet_DetailData",
+								"referenceName": "excelDetailData",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "AzureSqlDetailData",
+								"referenceName": "sqlReportDetail",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -247,101 +248,100 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
-				"annotations": [],
-				"lastPublishTime": "2022-03-11T10:32:21Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ReportDataSet_Sheet_ReportData')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlReportData')]",
-				"[concat(variables('factoryId'), '/datasets/ReportDataSet_Sheet_DetailData')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlDetailData')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Stored procedure1",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[CountRows]"
-						},
-						"linkedServiceName": {
-							"referenceName": "AzureSql_usecase3",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSql_usecase3')]"
+				"[concat(variables('factoryId'), '/datasets/excelReportData')]",
+				"[concat(variables('factoryId'), '/datasets/sqlReportData')]",
+				"[concat(variables('factoryId'), '/datasets/excelDetailData')]",
+				"[concat(variables('factoryId'), '/datasets/sqlReportDetail')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlDetailData')]",
+			"name": "[concat(parameters('factoryName'), '/excelDetailData')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureSql_usecase3",
+					"referenceName": "adl_blobfilemanagement",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "AzureSqlTable",
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "DetailData",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ReportData.xlsx",
+						"fileSystem": "tempstoreforprocessing"
+					}
+				},
 				"schema": [
 					{
-						"name": "colA",
-						"type": "nvarchar"
+						"type": "String"
 					},
 					{
-						"name": "colB",
-						"type": "nvarchar"
+						"type": "String"
 					},
 					{
-						"name": "colC",
-						"type": "nvarchar"
+						"type": "String"
 					},
 					{
-						"name": "colD",
-						"type": "nvarchar"
-					},
-					{
-						"name": "recordId",
-						"type": "int",
-						"precision": 10
+						"type": "String"
 					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "DetailData"
-				}
+				]
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSql_usecase3')]"
+				"[concat(variables('factoryId'), '/linkedServices/adl_blobfilemanagement')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlReportData')]",
+			"name": "[concat(parameters('factoryName'), '/excelReportData')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adl_blobfilemanagement",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "ReportData",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ReportData.xlsx",
+						"fileSystem": "tempstoreforprocessing"
+					}
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adl_blobfilemanagement')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sqlReportData')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "ReportData table in SQL DB",
 				"linkedServiceName": {
 					"referenceName": "AzureSql_usecase3",
 					"type": "LinkedServiceReference"
@@ -385,82 +385,46 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ReportDataSet_Sheet_DetailData')]",
+			"name": "[concat(parameters('factoryName'), '/sqlReportDetail')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "adl_blobfilemanagement",
+					"referenceName": "AzureSql_usecase3",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "DetailData",
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "ReportData.xlsx",
-						"fileSystem": "tempstoreforprocessing"
-					}
-				},
+				"type": "AzureSqlTable",
 				"schema": [
 					{
-						"type": "String"
+						"name": "colA",
+						"type": "nvarchar"
 					},
 					{
-						"type": "String"
+						"name": "colB",
+						"type": "nvarchar"
 					},
 					{
-						"type": "String"
+						"name": "colC",
+						"type": "nvarchar"
 					},
 					{
-						"type": "String"
+						"name": "colD",
+						"type": "nvarchar"
+					},
+					{
+						"name": "recordId",
+						"type": "int",
+						"precision": 10
 					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/adl_blobfilemanagement')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ReportDataSet_Sheet_ReportData')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "adl_blobfilemanagement",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Excel",
+				],
 				"typeProperties": {
-					"sheetName": "ReportData",
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "ReportData.xlsx",
-						"fileSystem": "tempstoreforprocessing"
-					}
-				},
-				"schema": [
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					}
-				]
+					"schema": "dbo",
+					"table": "DetailData"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/adl_blobfilemanagement')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSql_usecase3')]"
 			]
 		},
 		{
