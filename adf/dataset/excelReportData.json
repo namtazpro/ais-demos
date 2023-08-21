@@ -1,0 +1,36 @@
+{
+	"name": "excelReportData",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adl_blobfilemanagement",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "ReportData",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "ReportData.xlsx",
+				"fileSystem": "tempstoreforprocessing"
+			}
+		},
+		"schema": [
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			}
+		]
+	}
+}
