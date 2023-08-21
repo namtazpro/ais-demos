@@ -1,6 +1,7 @@
 {
-	"name": "AzureSqlReportData",
+	"name": "sqlReportData",
 	"properties": {
+		"description": "ReportData table in SQL DB",
 		"linkedServiceName": {
 			"referenceName": "AzureSql_usecase3",
 			"type": "LinkedServiceReference"
@@ -38,6 +39,5 @@
 			"schema": "dbo",
 			"table": "ReportData"
 		}
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }

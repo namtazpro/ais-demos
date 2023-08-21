@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlDetailData",
+	"name": "sqlReportDetail",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSql_usecase3",
@@ -34,6 +34,5 @@
 			"schema": "dbo",
 			"table": "DetailData"
 		}
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }

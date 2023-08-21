@@ -1,5 +1,5 @@
 {
-	"name": "ReportDataSet_Sheet_DetailData",
+	"name": "excelReportData",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "adl_blobfilemanagement",
@@ -8,7 +8,7 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "DetailData",
+			"sheetName": "ReportData",
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "ReportData.xlsx",
@@ -27,8 +27,10 @@
 			},
 			{
 				"type": "String"
+			},
+			{
+				"type": "String"
 			}
 		]
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }

@@ -3,20 +3,20 @@
     "contentVersion": "1.0.0.0",
   "parameters": {
     "logicAppname": {
-      "value": "la-ais-demos"
+      "value": "la-ais-demos2"
     },
     "appInsightName": {
-      "value": "appinsights-la-ais-demos"
+      "value": "appinsights-la-ais-demos2"
     },
     "use32BitWorkerProcess": {
       "value": true
     },
     "hostingPlanName": {
-      "value": "plan-la-ais-demos"
+      "value": "plan-la-ais-demos2"
     },
 
     "StorageAccountName": {
-      "value": "logicappstorage727274"
+      "value": "logicappstorage7272742"
     },
 
     "sku": {

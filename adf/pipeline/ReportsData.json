@@ -1,13 +1,14 @@
 {
-	"name": "IngestReportingData",
+	"name": "ReportsData",
 	"properties": {
+		"description": "Ingest sales of the day report data",
 		"activities": [
 			{
-				"name": "copy ReportData Sheet",
+				"name": "Copy ReportData sheet",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "7.00:00:00",
+					"timeout": "0.12:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -97,30 +98,30 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ReportDataSet_Sheet_ReportData",
+						"referenceName": "excelReportData",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureSqlReportData",
+						"referenceName": "sqlReportData",
 						"type": "DatasetReference"
 					}
 				]
 			},
 			{
-				"name": "copy DetailData sheet",
+				"name": "Copy DetailData sheet",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "copy ReportData Sheet",
+						"activity": "Copy ReportData sheet",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					}
 				],
 				"policy": {
-					"timeout": "7.00:00:00",
+					"timeout": "0.12:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -199,20 +200,18 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ReportDataSet_Sheet_DetailData",
+						"referenceName": "excelDetailData",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureSqlDetailData",
+						"referenceName": "sqlReportDetail",
 						"type": "DatasetReference"
 					}
 				]
 			}
 		],
-		"annotations": [],
-		"lastPublishTime": "2022-03-11T10:32:21Z"
-	},
-	"type": "Microsoft.DataFactory/factories/pipelines"
+		"annotations": []
+	}
 }
