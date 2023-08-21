@@ -1,0 +1,7 @@
+{
+	"name": "ReportsData",
+	"properties": {
+		"description": "Ingest sales of the day report data",
+		"annotations": []
+	}
+}
